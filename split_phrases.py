@@ -102,6 +102,7 @@ def convert(filepath, start, end, performer, language, date, organization,
             license, word, outpath):
     command = ['ffmpeg', '-i', filepath, '-ss', str(start),
                '-t', str(end - start), '-ac', '1',
+               '-compression_level', '12',
                '-metadata', 'title=' + word,
                '-metadata', 'genre=']
     if performer:
