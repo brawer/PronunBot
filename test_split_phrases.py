@@ -30,12 +30,13 @@ class TestSplitPhrases(unittest.TestCase):
                 '-f', 'ffmetadata', os.path.join(workdir, 'metadata.txt')],
                 stderr=subprocess.STDOUT)
             metadata = read_text_file(workdir, 'metadata.txt')
-            self.assertIn(r'TITLE=jeu', metadata)
-            self.assertIn(r'PERFORMER=Erwin Ardüser', metadata)
-            self.assertIn(r'LANGUAGE=rm-sursilv', metadata)
-            self.assertIn(r'DATE=2007-03-09', metadata)
-            self.assertIn(r'ORGANIZATION=Lia Rumantscha, Conradin Klais',
+            self.assertIn('TITLE=jeu', metadata)
+            self.assertIn('PERFORMER=Erwin Ardüser', metadata)
+            self.assertIn('LANGUAGE=rm-sursilv', metadata)
+            self.assertIn('DATE=2007-03-09', metadata)
+            self.assertIn('ORGANIZATION=Lia Rumantscha, Conradin Klais',
                           metadata)
+            self.assertIn('REPLAYGAIN_REFERENCE_LOUDNESS', metadata)
 
 
 # Helper for running unit tests.

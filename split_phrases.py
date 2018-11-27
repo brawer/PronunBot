@@ -119,6 +119,7 @@ def convert(filepath, start, end, performer, language, date, organization,
     try:
         dump = subprocess.check_output(command, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as err:
+        os.remove(outpath)
         return False
     return True
 
@@ -145,6 +146,13 @@ def process(filepath, fails):
             fails.write(filepath + '\n')
 
 
+def add_replay_gain_metadata(dirpath):
+    # Add ReplayGain metadata to all FLAC files in `dirpath`.
+    flacfiles = [f for f in os.listdir(dirpath) if f.endswith('.flac')]
+    command = ['/usr/bin/metaflac', '--add-replay-gain'] + flacfiles
+    subprocess.check_output(command, cwd=dirpath, stderr=subprocess.STDOUT)
+
+
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser(
         description='extract words from a collection of MP3 files')
@@ -168,6 +176,8 @@ if __name__ == '__main__':
     os.mkdir(args.output)
     with open(os.path.join(args.output, 'split-failures.txt'), 'w') as fails:
         for filename in sorted(os.listdir(args.recordings)):
+            if 'seprepara' in filename: break
             if filename.endswith('.mp3'):
                 filepath = os.path.join(args.recordings, filename)
                 process(filepath, fails)
+    add_replay_gain_metadata(args.output)
