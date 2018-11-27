@@ -103,18 +103,18 @@ def convert(filepath, start, end, performer, language, date, organization,
     command = ['ffmpeg', '-i', filepath, '-ss', str(start),
                '-t', str(end - start), '-ac', '1',
                '-compression_level', '12',
-               '-metadata', 'title=' + word,
-               '-metadata', 'genre=']
+               '-metadata', 'TITLE=' + word,
+               '-metadata', 'GENRE=']
     if performer:
-        command.extend(['-metadata', 'performer=' + performer])
+        command.extend(['-metadata', 'PERFORMER=' + performer])
     if language:
-        command.extend(['-metadata', 'language=' + language])
+        command.extend(['-metadata', 'LANGUAGE=' + language])
     if organization:
-        command.extend(['-metadata', 'organization=' + organization])
+        command.extend(['-metadata', 'ORGANIZATION=' + organization])
     if date:
-        command.extend(['-metadata', 'date=' + date])
+        command.extend(['-metadata', 'DATE=' + date])
     if license:
-        command.extend(['-metadata', 'license=' + license])
+        command.extend(['-metadata', 'LICENSE=' + license])
     command.append(outpath)
     try:
         dump = subprocess.check_output(command, stderr=subprocess.STDOUT)
