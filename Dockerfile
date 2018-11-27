@@ -11,4 +11,5 @@
 
 FROM python:3.7.1-alpine3.8
 RUN apk add --no-cache ffmpeg
+RUN pip install pywikibot
 CMD /bin/sh
