@@ -51,7 +51,7 @@ the Linux container:
 python split_phrases.py -o split  \
   --language=rm-sursilv --date=2007-03-09  \
   --performer="Erwin Ardüser"  \
-  --organization="Lia Rumantscha, Conradin Klaiss"  \
+  --organization="Lia Rumantscha / Conradin Klaiss, 7001 Chur, Switzerland"  \
   --copyright="2007 Lia Rumantscha"  \
   --license="Creative Commons Zero v1.0 Universal"  \
   /recordings
