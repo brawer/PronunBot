@@ -18,6 +18,7 @@ class TestSplitPhrases(unittest.TestCase):
                 '-o', workdir, '--language', 'rm-sursilv',
                 '--date', '2007-03-09', '--performer', 'Erwin Ardüser',
                 '--organization', 'Lia Rumantscha, Conradin Klais',
+                '--copyright', '2007 Lia Rumantscha',
                 '--license', 'Creative Commons Zero v1.0 Universal',
                 'testdata/split_phrases'], stderr=subprocess.STDOUT)
             self.assertEqual(read_text_file(workdir, 'split-failures.txt'),
@@ -34,6 +35,9 @@ class TestSplitPhrases(unittest.TestCase):
             self.assertIn('PERFORMER=Erwin Ardüser', metadata)
             self.assertIn('LANGUAGE=rm-sursilv', metadata)
             self.assertIn('DATE=2007-03-09', metadata)
+            self.assertIn('COPYRIGHT=2007 Lia Rumantscha', metadata)
+            self.assertIn('LICENSE=Creative Commons Zero v1.0 Universal',
+                          metadata)
             self.assertIn('ORGANIZATION=Lia Rumantscha, Conradin Klais',
                           metadata)
             self.assertIn('REPLAYGAIN_REFERENCE_LOUDNESS', metadata)

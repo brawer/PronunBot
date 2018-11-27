@@ -52,6 +52,7 @@ python split_phrases.py -o split  \
   --language=rm-sursilv --date=2007-03-09  \
   --performer="Erwin Ardüser"  \
   --organization="Lia Rumantscha, Conradin Klaiss"  \
+  --copyright="2007 Lia Rumantscha"  \
   --license="Creative Commons Zero v1.0 Universal"  \
   /recordings
 ```

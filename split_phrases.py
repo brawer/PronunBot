@@ -99,7 +99,7 @@ def find_spoken_wordspans(filepath, text):
 
 
 def convert(filepath, start, end, performer, language, date, organization,
-            license, word, outpath):
+            license, copyright, word, outpath):
     command = ['ffmpeg', '-i', filepath, '-ss', str(start),
                '-t', str(end - start), '-ac', '1',
                '-compression_level', '12',
@@ -115,6 +115,8 @@ def convert(filepath, start, end, performer, language, date, organization,
         command.extend(['-metadata', 'DATE=' + date])
     if license:
         command.extend(['-metadata', 'LICENSE=' + license])
+    if copyright:
+        command.extend(['-metadata', 'COPYRIGHT=' + copyright])
     command.append(outpath)
     try:
         dump = subprocess.check_output(command, stderr=subprocess.STDOUT)
@@ -142,7 +144,7 @@ def process(filepath, fails):
         if not convert(filepath, start, end, performer=args.performer,
                        language=args.language, date=args.date,
                        organization=args.organization, license=args.license,
-                       word=word, outpath=outpath):
+                       copyright=args.copyright, word=word, outpath=outpath):
             fails.write(filepath + '\n')
 
 
@@ -160,6 +162,8 @@ if __name__ == '__main__':
                            help='language being processed')
     argparser.add_argument('--performer',
                            help='name of speaker who did the reading')
+    argparser.add_argument('--copyright',
+                           help='copyright attribution, eg. "2001 Foo Bar"')
     argparser.add_argument('--license',
                            help='license for the work')
     argparser.add_argument(
