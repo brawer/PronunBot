@@ -180,7 +180,7 @@ if __name__ == '__main__':
     os.mkdir(args.output)
     with open(os.path.join(args.output, 'split-failures.txt'), 'w') as fails:
         for filename in sorted(os.listdir(args.recordings)):
-            if 'seprepara' in filename: break
+            # if 'seprepara' in filename: break
             if filename.endswith('.mp3'):
                 filepath = os.path.join(args.recordings, filename)
                 process(filepath, fails)
