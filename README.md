@@ -6,15 +6,15 @@ to [Wikimedia Commons](https://commons.wikimedia.org/) and
 
 ## Background
 
-We’ve built this tool at a [Plurilinguism
+We’ve built this tool at the [Plurilinguism
 Hackathon](https://forum-helveticum.ch/en/hackathon/) in November
 2018.  [Lia Rumantscha](http://www.liarumantscha.ch/?changeLang=_en)
-contributed about 5000 recorded pronunciations in the [Sursilvan
+contributed recorded pronunciations of about 5000 phrases in the [Sursilvan
 variant](https://en.wikipedia.org/wiki/Sursilvan_dialects_(Romansh))
 of the [Romansh
 language](https://en.wikipedia.org/wiki/Romansh_language) to the
-hackathon. The pronunciations had been recorded back in 2007 as
-language training material; at the hackathon, Lia Rumantscha kindly
+hackathon. Back in March 2007, the pronunciations had been recorded
+as language training material; at the 2018 hackathon, Lia Rumantscha kindly
 gave permission to upload them to Wikidata under the Creative Commons Zero
 license.
 
@@ -28,19 +28,21 @@ Linux container. For setup instructions, see the comments in `Dockerfile`.
 
 ## Splitting multi-word phrases
 
-In our project, many of the original recordings are multi-word phrases.
-An example is the phrase [“jeu savess prender”](https://cdn.jsdelivr.net/gh/brawer/PronunBot/testdata/split_phrases/jeu%20savess%20prender.mp3). Because
-the recording was done for language training, the words are often
-separated by a brief span of silence; this is rather unusual in recorded
-speech.
+Many of the original recordings are multi-word phrases.
+An example is the phrase [“jeu savess prender” 🔉](https://cdn.jsdelivr.net/gh/brawer/PronunBot/testdata/split_phrases/jeu%20savess%20prender.mp3). Because
+the initial recording was done for language training, the words are often
+separated by spans of silence; this is rather unusual in recorded
+speech. Also, the original recordings often contain a few seconds of silence
+before and after the spoken phrase.
 
-However, for using the sound snippets in Wikidata lexemes, we need
-a separate sound snippet for every word. The tool `split_phrases.py`
-goes over the input files, calls [FFmpeg](https://www.ffmpeg.org/)
-to detect silences, and then applies a simple heuristic to split the
-sound file into single words.  Finally, the tool will tag each snippet
-with metadata (such as license, performer, or language) and compress
-the sound in the lossless [FLAC format](https://en.wikipedia.org/wiki/FLAC).
+For using the sound snippets in Wikidata lexemes, however, we need a
+separate sound snippet for every word without surrounding silence.
+The tool `split_phrases.py` helps to solve this problem: it goes over the
+input files, calls [FFmpeg](https://www.ffmpeg.org/) to detect
+silences, and then applies a simple heuristic to split the sound file
+into single words.  Finally, the tool will tag each snippet with
+metadata (such as license, performer, or language) and compress the
+sound in the lossless [FLAC format](https://en.wikipedia.org/wiki/FLAC).
 
 To run the splitting script, we’ve used the following command inside
 the Linux container:
@@ -54,11 +56,11 @@ python split_phrases.py -o split  \
   /recordings
 ```
 
-Some recordings, for example the phrase [bien
-di 🔉](https://cdn.jsdelivr.net/gh/brawer/PronunBot/testdata/split_phrases/bien%20di.mp3),
+Some input files, for example the recorded phrase [“bien
+di” 🔉](https://cdn.jsdelivr.net/gh/brawer/PronunBot/testdata/split_phrases/bien%20di.mp3),
 do not have enough silent spans for splitting the phrase into
-words. The tool logs the problem cases in `split-failures.txt`,
-located inside the output directory.
+words. The tool logs the problem cases into `split-failures.txt`
+next to the output files.
 
 
 ## Vetting the recordings
