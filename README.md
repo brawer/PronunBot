@@ -28,15 +28,19 @@ Linux container. For setup instructions, see the comments in `Dockerfile`.
 
 ## Splitting multi-word phrases
 
-In our project, many of the original recordings are multi-word phrases
-such as “jeu savess prender”. Typically (and rather unusually for
-recorded speech), each word is separated by a brief span of silence.
-For Wikidata, however, we need a separate sound file for each word.
-This tool goes over the input files, calls [FFmpeg](https://www.ffmpeg.org/)
+In our project, many of the original recordings are multi-word phrases.
+An example is the phrase [“jeu savess prender”](https://cdn.jsdelivr.net/gh/brawer/PronunBot/testdata/split_phrases/jeu%20savess%20prender.mp3). Because
+the recording was done for language training, the words are often
+separated by a brief span of silence; this is rather unusual in recorded
+speech.
+
+However, for using the sound snippets in Wikidata lexemes, we need
+a separate sound snippet for every word. The tool `split_phrases.py`
+goes over the input files, calls [FFmpeg](https://www.ffmpeg.org/)
 to detect silences, and then applies a simple heuristic to split the
 sound file into single words.  Finally, the tool will tag each snippet
-with metadata (such as license, performer, or language) and convert it
-to the lossless [FLAC format](https://en.wikipedia.org/wiki/FLAC).
+with metadata (such as license, performer, or language) and compress
+the sound in the lossless [FLAC format](https://en.wikipedia.org/wiki/FLAC).
 
 To run the splitting script, we’ve used the following command inside
 the Linux container:
@@ -49,6 +53,12 @@ python split_phrases.py -o split  \
   --license="Creative Commons Zero v1.0 Universal"  \
   /recordings
 ```
+
+Some recordings, for example the phrase [bien
+di 🔉](https://cdn.jsdelivr.net/gh/brawer/PronunBot/testdata/split_phrases/bien%20di.mp3),
+do not have enough silent spans for splitting the phrase into
+words. The tool logs the problem cases in `split-failures.txt`,
+located inside the output directory.
 
 
 ## Vetting the recordings
