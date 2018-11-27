@@ -6,7 +6,6 @@
 import codecs
 import os
 import subprocess
-import sys
 import tempfile
 import unittest
 
@@ -20,7 +19,7 @@ class TestSplitPhrases(unittest.TestCase):
                 '--date', '2007-03-09', '--performer', 'Erwin Ardüser',
                 '--organization', 'Lia Rumantscha, Conradin Klais',
                 '--license', 'Creative Commons Zero v1.0 Universal',
-                'testdata/split_phrases'], stderr=sys.stdout.buffer)
+                'testdata/split_phrases'], stderr=subprocess.STDOUT)
             self.assertEqual(read_text_file(workdir, 'split-failures.txt'),
                              'testdata/split_phrases/bien di.mp3\n')
             self.assertTrue(exists(workdir, 'jeu-1.flac'))
@@ -29,7 +28,7 @@ class TestSplitPhrases(unittest.TestCase):
             subprocess.check_output([
                 'ffmpeg', '-i', os.path.join(workdir, 'jeu-1.flac'),
                 '-f', 'ffmetadata', os.path.join(workdir, 'metadata.txt')],
-                stderr=sys.stdout.buffer)
+                stderr=subprocess.STDOUT)
             metadata = read_text_file(workdir, 'metadata.txt')
             self.assertIn(r'TITLE=jeu', metadata)
             self.assertIn(r'PERFORMER=Erwin Ardüser', metadata)
