@@ -21,7 +21,7 @@ class TestSplitPhrases(unittest.TestCase):
                 '--organization', 'Lia Rumantscha, Conradin Klais',
                 '--license', 'Creative Commons Zero v1.0 Universal',
                 'testdata/split_phrases'], stderr=sys.stdout.buffer)
-            self.assertEqual(read_text_file(workdir, 'fails.txt'),
+            self.assertEqual(read_text_file(workdir, 'split-failures.txt'),
                              'testdata/split_phrases/bien di.mp3\n')
             self.assertTrue(exists(workdir, 'jeu-1.flac'))
             self.assertTrue(exists(workdir, 'savess-1.flac'))

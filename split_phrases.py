@@ -166,7 +166,7 @@ if __name__ == '__main__':
     if os.path.exists(args.output):
         shutil.rmtree(args.output)
     os.mkdir(args.output)
-    with open(os.path.join(args.output, 'fails.txt'), 'w') as fails:
+    with open(os.path.join(args.output, 'split-failures.txt'), 'w') as fails:
         for filename in sorted(os.listdir(args.recordings)):
             if filename.endswith('.mp3'):
                 filepath = os.path.join(args.recordings, filename)
