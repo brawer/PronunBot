@@ -17,7 +17,7 @@ import subprocess
 
 
 def check(workdir):
-    qa_path = os.path.join(workdir, 'qa.txt')
+    qa_path = 'qa.txt'
     qa = read_qa(qa_path)
     qa_file = codecs.open(qa_path, 'a', 'utf-8')
     phrases = {}
