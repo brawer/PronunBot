@@ -64,9 +64,12 @@ words. The tool logs the problem cases into `split-failures.txt`
 next to the output files.
 
 
-## Vetting the recordings
+## Quality assessment
 
-TODO
+To check the quality of recorded phrases, run `python3 assess_quality.py split`
+on the Mac command line. For each phrase or word, the tool plays the available
+recordings; the user then picks the best, or enters `0` if they’re all bad.
+The quality assessment gets recorded into a file `qa.txt`.
 
 
 ## Uploading sound files to Wikimedia Commons
