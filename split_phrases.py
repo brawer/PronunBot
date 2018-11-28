@@ -26,7 +26,7 @@ def get_text(filepath):
     """'jeu savess prender.mp3' --> 'jeu savess prender'"""
     text = filepath[:-len('.mp3')]
     text = text.replace('Ç', 'é')
-    text = ' '.join(text.replace(',', ' ').split())
+    text = ' '.join(text.split())
     if text[-1] == '.':
         text = text[:-1]
     if ' ' in text:
@@ -80,22 +80,29 @@ def score_silence(item):
 
 
 def find_spoken_wordspans(filepath, text):
-    """('jeu savess.mp3', 'jeu savess') --> [('jeu', 0.1, 0.3), ('savess', 0.7, 0.8)]
+    """('jeu savess.mp3', 'jeu savess') --> (True, [('jeu', 0.1, 0.3), ...])
+
+    If the audio file could be split into words, the first result is True.
+    Otherwise, the first result will be False; but even then, we still return
+    a span for the entire multi-word phrase.
     """
-    words = text.split()
+    words = [w.rstrip('.,!?') for w in text.split()]
     silences = find_silences(filepath)
+    spans = []
     if not silences:
-        return None
+        return (False, spans)
+    # If there is more than a single word, we also keep the whole phrase.
+    if len(words) > 1 and len(silences) >= 2:
+        spans.append((text, silences[0][1], silences[-1][0]))
     # For N words, take the best (N + 1) silences in the audio.
     if len(silences) <= len(words):
-        return None  # fewer silences than expected; needs manual splitting
+        return (False, spans)  # fewer silences than expected
     silences = sorted(silences, key=score_silence, reverse=True)[:len(words)+1]
     silences = list(sorted(silences))
     # We’re interested in the non-silent spans _between_ silences.
-    spans = []
     for i in range(len(words)):
         spans.append((words[i], silences[i][1], silences[i+1][0]))
-    return spans
+    return (True, spans)
 
 
 def convert(filepath, start, end, performer, language, date, organization,
@@ -130,10 +137,9 @@ def process(filepath, fails):
     """Tries to process one single file, recording failures into `fails`."""
     print(filepath)
     text = get_text(filepath.split('/')[-1])
-    spans = find_spoken_wordspans(filepath, text)
-    if not spans:
+    ok, spans = find_spoken_wordspans(filepath, text)
+    if not ok:
         fails.write(filepath + '\n')
-        return
     for word, start, end in spans:
         i = 0
         while True:
