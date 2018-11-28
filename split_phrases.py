@@ -26,7 +26,9 @@ import tempfile
 def get_text(filepath):
     """'jeu savess prender.mp3' --> 'jeu savess prender'"""
     text = filepath[:-len('.mp3')]
-    text = text.replace('Ç', 'é')
+    if text.endswith(' (2)'):
+        text = text[:-4]
+    text = text.replace('Ç', 'é').replace('ä', 'è').replace('î', 'ö').replace('Å', 'ü')
     text = ' '.join(text.split())
     if text[-1] == '.':
         text = text[:-1]
