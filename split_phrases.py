@@ -22,16 +22,27 @@ import subprocess
 import shutil
 import tempfile
 
+# Misc fixes to correct typos (or spell out numerals) in transcribed speech.
+SPELL_FIXES = {
+  '3': 'treis',  # 8 meins 3 fa 5; 15 partiu cun 3 fa 5; 5 ed aunc 3 fa 8; 3 ga 3 fa 9
+  '5': 'tschun',  # 8 meins 3 fa 5; 15 partiu cun 3 fa 5; aviert naven dallas 5 entochen las 9; 5 ed aunc 3 fa 8; varga 5 minutas
+  '8': 'otg',  # 8 meins 3 fa 5; 5 ed aunc 3 fa 8
+  '9': 'nov', # aviert naven dallas 5 entochen las 9; 3 ga 3 fa 9
+  '10': 'diesch', # gnanc 10 minutas
+  '11.25': 'endisch e ventgatschun', # Igl ei las 11.25.
+  '15': 'quendisch', # 15 partiu cun 3 fa 5
+}
+
 
 def get_text(filepath):
     """'jeu savess prender.mp3' --> 'jeu savess prender'"""
     text = filepath[:-len('.mp3')]
     if text.endswith(' (2)'):
         text = text[:-4]
-    text = text.replace('Ç', 'é').replace('ä', 'è').replace('î', 'ö').replace('Å', 'ü')
-    text = ' '.join(text.split())
     if text[-1] == '.':
         text = text[:-1]
+    text = text.replace('Ç', 'é').replace('ä', 'è').replace('î', 'ö').replace('Å', 'ü')
+    text = ' '.join([SPELL_FIXES.get(w, w) for w in text.split()])
     if ' ' in text:
         words = text.split()
         if words[0] not in {'Anita', 'Julia', 'Peter', 'Sonja'}:
