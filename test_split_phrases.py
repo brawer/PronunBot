@@ -20,7 +20,7 @@ class TestSplitPhrases(unittest.TestCase):
                 '--organization', 'Lia Rumantscha, Conradin Klais',
                 '--copyright', '2007 Lia Rumantscha',
                 '--license', 'Creative Commons Zero v1.0 Universal',
-                'testdata/split_phrases'], stderr=subprocess.STDOUT)
+                'testdata/split_phrases'])#, stderr=subprocess.STDOUT)
             self.assertEqual(read_text_file(workdir, 'split-failures.txt'),
                              'testdata/split_phrases/bien di.mp3\n')
             self.assertTrue(exists(workdir, 'bien di-1.flac'))
@@ -28,10 +28,11 @@ class TestSplitPhrases(unittest.TestCase):
             self.assertTrue(exists(workdir, 'savess-1.flac'))
             self.assertTrue(exists(workdir, 'prender-1.flac'))
             self.assertTrue(exists(workdir, 'jeu savess prender-1.flac'))
-            subprocess.check_output([
+            output = subprocess.check_output([
                 'ffmpeg', '-i', os.path.join(workdir, 'jeu-1.flac'),
                 '-f', 'ffmetadata', os.path.join(workdir, 'metadata.txt')],
                 stderr=subprocess.STDOUT)
+            self.assertIn(b'Audio: flac, 44100 Hz, mono, s16', output)
             metadata = read_text_file(workdir, 'metadata.txt')
             self.assertIn('TITLE=jeu', metadata)
             self.assertIn('PERFORMER=Erwin Ardüser', metadata)
@@ -42,7 +43,6 @@ class TestSplitPhrases(unittest.TestCase):
                           metadata)
             self.assertIn('ORGANIZATION=Lia Rumantscha, Conradin Klais',
                           metadata)
-            self.assertIn('REPLAYGAIN_REFERENCE_LOUDNESS', metadata)
 
 
 # Helper for running unit tests.

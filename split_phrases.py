@@ -20,6 +20,7 @@ import os
 import re
 import subprocess
 import shutil
+import tempfile
 
 
 def get_text(filepath):
@@ -105,10 +106,40 @@ def find_spoken_wordspans(filepath, text):
     return (True, spans)
 
 
+def extract(filepath, start, end, outpath):
+    command = ['ffmpeg', '-i', filepath, '-ss', str(start),
+               '-t', str(end - start), '-ac', '1', outpath]
+    try:
+        dump = subprocess.check_output(command, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as err:
+        os.remove(outpath)
+        return False
+    return True
+
+
+def normalize_loudness(filepath, outpath):
+    """Normalize loudness of `filepath` according to EBU Recommendation 128."""
+    command = ['ffmpeg-normalize', '-nt', 'ebu', '--dual-mono', '-o', outpath,
+               '-b:a', '44.1K', '--sample-rate', '44100', filepath]
+    try:
+        dump = subprocess.check_output(command, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as err:
+        if os.path.exists(outpath):
+            os.remove(outpath)
+        return False
+    return True
+
+
 def convert(filepath, start, end, performer, language, date, organization,
             license, copyright, word, outpath):
-    command = ['ffmpeg', '-i', filepath, '-ss', str(start),
-               '-t', str(end - start), '-ac', '1',
+    snippet = tempfile.mktemp(prefix='snippet-', suffix='.wav')
+    normalized = tempfile.mktemp(prefix='normalized-', suffix='.wav')
+    if not all([extract(filepath, start, end, snippet),
+                normalize_loudness(snippet, normalized)]):
+        if os.path.exists(snippet): os.remove(snippet)
+        if os.path.exists(normalized): os.remove(normalized)
+        return False
+    command = ['ffmpeg', '-i', normalized,
                '-compression_level', '12',
                '-metadata', 'TITLE=' + word,
                '-metadata', 'GENRE=']
@@ -130,6 +161,9 @@ def convert(filepath, start, end, performer, language, date, organization,
     except subprocess.CalledProcessError as err:
         os.remove(outpath)
         return False
+    finally:
+        if os.path.exists(snippet): os.remove(snippet)
+        if os.path.exists(normalized): os.remove(normalized)
     return True
 
 
@@ -152,13 +186,6 @@ def process(filepath, fails):
                        organization=args.organization, license=args.license,
                        copyright=args.copyright, word=word, outpath=outpath):
             fails.write(filepath + '\n')
-
-
-def add_replay_gain_metadata(dirpath):
-    # Add ReplayGain metadata to all FLAC files in `dirpath`.
-    flacfiles = [f for f in os.listdir(dirpath) if f.endswith('.flac')]
-    command = ['/usr/bin/metaflac', '--add-replay-gain'] + flacfiles
-    subprocess.check_output(command, cwd=dirpath, stderr=subprocess.STDOUT)
 
 
 if __name__ == '__main__':
@@ -190,4 +217,3 @@ if __name__ == '__main__':
             if filename.endswith('.mp3'):
                 filepath = os.path.join(args.recordings, filename)
                 process(filepath, fails)
-    add_replay_gain_metadata(args.output)
