@@ -61,17 +61,17 @@ WIKIMEDIA_COMMONS_LICENSE_TAG = {
 
 
 WIKIMEDIA_COMMONS_DESCRIPTION = """
-=={{int:filedesc}}==
-{{Information
-|description={{en|1={{Pronunciation|lang={LANGUAGE}|1={TITLE}}}}}
+=={{{{int:filedesc}}}}==
+{{{{Information
+|description={{{{en|1={{{{Pronunciation|lang={LANGUAGE}|1={TITLE}}}}}}}}}
 |date={DATE}
 |source={ORGANIZATION}
 |author=Speaker: {PERFORMER}
-}}
+}}}}
 
 {_VOICE_GENDER}
 
-=={{int:license-header}}==
+=={{{{int:license-header}}}}==
 {_LICENSE_TAG}
 
 [[Category:{_LANGUAGE_CATEGORY}]]
@@ -108,10 +108,10 @@ if __name__ == '__main__':
     for filepath in sorted(find_uploadable_files('qa.txt', args.workdir)):
         # TODO: Remove the following after getting approval to run the bot.
         if filepath not in [
-                'split/la constituziun federala-1.flac',
-                #'split/Grönlanda-1.flac',
-                #'split/calcogn-2.flac',
-                #'split/jeu carezel tei-1.flac'
+                #'split/la constituziun federala-1.flac',
+                'split/Grönlanda-1.flac',
+                'split/calcogn-2.flac',
+                'split/jeu carezel tei-1.flac'
         ]:
             continue
         upload(filepath)
