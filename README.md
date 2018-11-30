@@ -67,14 +67,23 @@ next to the output files.
 ## Quality assessment
 
 To check the quality of recorded phrases, run `python3 assess_quality.py split`
-on the Mac command line. For each phrase or word, the tool plays the available
-recordings; the user then picks the best, or enters `0` if they’re all bad.
+on the Mac command line. For each phrase or word, the tool plays all available
+recordings. The user then picks the best variant, or `0` if they’re all bad.
 The quality assessment gets recorded into a file `qa.txt`.
 
 
 ## Uploading sound files to Wikimedia Commons
 
-TODO
+To upload the recordings to Wikimedia Commons, run this in the Linux container:
+
+```
+PYTHONPATH=/pywikibot:$PYTHONPATH python upload_to_commons.py split
+```
+
+TODO: Find out why `pywikibot` cannot be installed during
+container creation. There is a pip package for pywikibot, but it does
+not seem to work properly on Python 3; perhaps it just needs to be
+updated.
 
 
 ## Uploading to Wikidata
