@@ -35,15 +35,9 @@ def extract_metadata(filepath):
 def make_description(metadata):
     params = dict(metadata)
     params['_LANGUAGE_CATEGORY'] = LANGUAGE_CATEGORY[metadata['LANGUAGE']]
-    params['_VOICE_GENDER'] = VOICE_GENDER[metadata['PERFORMER']]
     params['_ORG_CATEGORY'] = ORG_CATEGORY[metadata['ORGANIZATION']]
     params['_LICENSE_TAG'] = WIKIMEDIA_COMMONS_LICENSE_TAG[metadata['LICENSE']]
     return WIKIMEDIA_COMMONS_DESCRIPTION.format(**params)
-
-
-VOICE_GENDER = {
-    'Erwin Ardüser': '{{Male voice}}',
-}
 
 
 LANGUAGE_CATEGORY = {
@@ -68,8 +62,6 @@ WIKIMEDIA_COMMONS_DESCRIPTION = """
 |source={ORGANIZATION}
 |author=Speaker: {PERFORMER}
 }}}}
-
-{_VOICE_GENDER}
 
 =={{{{int:license-header}}}}==
 {_LICENSE_TAG}
@@ -110,7 +102,8 @@ if __name__ == '__main__':
     for filepath in sorted(find_uploadable_files('qa.txt', args.workdir)):
         # TODO: Remove the following after getting approval to run the bot.
         if filepath not in [
-                'split/la constituziun federala-1.flac',
+                'split/gnanc diesch minutas-1.flac',
+                #'split/la constituziun federala-1.flac',
                 #'split/Grönlanda-1.flac',
                 #'split/calcogn-2.flac',
                 #'split/jeu carezel tei-1.flac'
