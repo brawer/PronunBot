@@ -42,7 +42,7 @@ def make_description(metadata):
 
 
 VOICE_GENDER = {
-    'Erwin Ardüser': 'Male voice',
+    'Erwin Ardüser': '{{Male voice}}',
 }
 
 
@@ -83,13 +83,15 @@ WIKIMEDIA_COMMONS_DESCRIPTION = """
 def upload(filepath):
     metadata = extract_metadata(filepath)
     description = make_description(metadata)
-    wikimedia_filename = (
-        'Pronunciation %s %s.flac' %
-        (metadata['LANGUAGE'], metadata['TITLE']))
+    language = metadata['LANGUAGE']
+    phrase = metadata['TITLE']
+    wikimedia_filename = '%s-%s.flac' % (language, phrase)
+    summary = 'Bot: Upload %s pronunciation of “%s”' % (language, phrase)
     bot = UploadRobot(
         url=[filepath], description=description,
         useFilename=wikimedia_filename,
         keepFilename=False, verifyDescription=True,
+        summary=summary,
         targetSite=pywikibot.getSite('commons', 'commons'))
     bot.run()
 
@@ -108,10 +110,10 @@ if __name__ == '__main__':
     for filepath in sorted(find_uploadable_files('qa.txt', args.workdir)):
         # TODO: Remove the following after getting approval to run the bot.
         if filepath not in [
-                #'split/la constituziun federala-1.flac',
-                'split/Grönlanda-1.flac',
-                'split/calcogn-2.flac',
-                'split/jeu carezel tei-1.flac'
+                'split/la constituziun federala-1.flac',
+                #'split/Grönlanda-1.flac',
+                #'split/calcogn-2.flac',
+                #'split/jeu carezel tei-1.flac'
         ]:
             continue
         upload(filepath)
